@@ -1,8 +1,9 @@
 # Shortest time interval (in seconds) between steps that the motor can handle
-MIN_STEP_TIME = 0.0015
+MIN_STEP_TIME = 0.002
 
 # Number of steps per rotation that the motor provides
-STEPS_PER_ROTATION = 512.0
+CYCLES_PER_ROTATION = 512.0  # we repeat the cycle (1, 2, 3, 4) 512 times to perform one rotation
+STEPS_PER_ROTATION = CYCLES_PER_ROTATION * 4
 
 # Distance between motors, in metres
 MOTOR_SPACING = 1.0
