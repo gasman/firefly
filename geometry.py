@@ -37,7 +37,7 @@ class Arena(object):
 
 
 # how long we should take to trace a full circle
-REVOLUTION_TIME = 30.0
+REVOLUTION_TIME = 90.0
 
 # centre coordinates of circle, in metres from top left
 CENTRE = (0.5, 0.5)
@@ -59,5 +59,5 @@ while True:
 
 	arena.set_position(x, y, t)
 
-	t += 0.0001  # TODO: a proper clock we can actually query
-	time.sleep(0.0001)
+	t += 0.0005  # TODO: a proper clock we can actually query
+	time.sleep(0.0005)
