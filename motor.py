@@ -20,7 +20,7 @@ class MotorRegulator(object):
 			# check that it's been more than MIN_STEP_TIME seconds since the last move
 			if self.last_move_time is not None:
 				time_diff = time - self.last_move_time
-				if time_diff < MIN_STEP_TIME:
+				if time_diff < (MIN_STEP_TIME - 0.000001):
 					raise Exception("Moved too fast! Steps were %fs apart, but minimum interval is %fs" % (time_diff, MIN_STEP_TIME))
 
 			self.last_move_time = time
