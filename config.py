@@ -10,3 +10,6 @@ MOTOR_SPACING = 1.0
 
 # Radius of each spool in metres
 SPOOL_RADIUS = 0.02
+
+# Interval (in seconds) between successive position calculations
+TICK_TIME = 0.0005

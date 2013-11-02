@@ -8,28 +8,34 @@ except ImportError:
 class MotorRegulator(object):
 	def __init__(self, motor_number, position=0):
 		self.motor = Motor(motor_number)
-		self._position = int(position)
+		self.position = int(position)
 		self.last_move_time = None
+		self.deadline = None
+		self.target = self.position
 
-	def set_position(self, new_pos, time):
-		new_pos_int = int(new_pos)
-		if new_pos_int == self._position:
-			pass
-		elif (new_pos_int == self._position - 1) or (new_pos_int == self._position + 1):
+	def tick(self, t):
+		if self.last_move_time is not None and t - self.last_move_time < MIN_STEP_TIME:
+			return
 
-			# check that it's been more than MIN_STEP_TIME seconds since the last move
-			if self.last_move_time is not None:
-				time_diff = time - self.last_move_time
-				if time_diff < (MIN_STEP_TIME - 0.000001):
-					raise Exception("Moved too fast! Steps were %fs apart, but minimum interval is %fs" % (time_diff, MIN_STEP_TIME))
+		if self.target > self.position:
+			self.position += 1
+			self.motor.set_position(self.position)
+			self.last_move_time = t
+			remaining_steps = self.target - self.position
+			eta = t + remaining_steps * MIN_STEP_TIME
+			if self.deadline is not None and eta > self.deadline:
+				print "Warning: going to miss deadline to go from %d to %d (deadline = %f, eta %f)" % (self.position, self.target, self.deadline, eta)
+		elif self.target < self.position:
+			self.position -= 1
+			self.motor.set_position(self.position)
+			self.last_move_time = t
+			remaining_steps = self.position - self.target
+			eta = t + remaining_steps * MIN_STEP_TIME
+			if self.deadline is not None and eta > self.deadline:
+				print "Warning: going to miss deadline to go from %d to %d (deadline = %f, eta %f)" % (self.position, self.target, self.deadline, eta)
 
-			self.last_move_time = time
-
-			self.motor.set_position(new_pos_int)
-			self._position = new_pos_int
-
-		else:
-			raise Exception("Moved too fast! Tried to move from %d to %d in one step" % (self._position, new_pos_int))
+	def done(self):
+		return self.target == self.position
 
 	def stop(self):
 		self.motor.stop()

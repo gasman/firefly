@@ -1,7 +1,8 @@
-from config import MOTOR_SPACING, SPOOL_RADIUS, STEPS_PER_ROTATION
+from config import MOTOR_SPACING, SPOOL_RADIUS, STEPS_PER_ROTATION, TICK_TIME
 from motor import MotorRegulator
 
 import math
+import time
 
 
 # number of radians in one motor step
@@ -14,6 +15,8 @@ class Arena(object):
 
 		self.motor0 = MotorRegulator(0, m0_step)
 		self.motor1 = MotorRegulator(1, m1_step)
+
+		self.time = 0
 
 	@staticmethod
 	def get_step_values(x, y):
@@ -29,7 +32,31 @@ class Arena(object):
 
 		return (m0_step, m1_step)
 
-	def set_position(self, x, y, time):
+	def goto(self, x, y):
+		# go to position (x, y), taking as long as required
 		m0_step, m1_step = self.get_step_values(x, y)
-		self.motor0.set_position(m0_step, time)
-		self.motor1.set_position(m1_step, time)
+		self.motor0.target = int(m0_step)
+		self.motor0.deadline = None
+
+		self.motor1.target = int(m1_step)
+		self.motor1.deadline = None
+
+		while not self.motor0.done() or not self.motor1.done():
+			self.tick()
+
+	def tick(self):
+		self.motor0.tick(self.time)
+		self.motor1.tick(self.time)
+		time.sleep(TICK_TIME)
+		self.time += TICK_TIME
+
+	def nudge(self, x, y):
+		# go to position (x, y) within one tick. Warn if this isn't possible
+		m0_step, m1_step = self.get_step_values(x, y)
+		self.motor0.target = int(m0_step)
+		self.motor0.deadline = self.time + TICK_TIME
+
+		self.motor1.target = int(m1_step)
+		self.motor1.deadline = self.time + TICK_TIME
+
+		self.tick()
