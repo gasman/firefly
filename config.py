@@ -6,10 +6,10 @@ CYCLES_PER_ROTATION = 512.0  # we repeat the cycle (1, 2, 3, 4) 512 times to per
 STEPS_PER_ROTATION = CYCLES_PER_ROTATION * 4
 
 # Distance between motors, in metres
-MOTOR_SPACING = 1.0
+MOTOR_SPACING = 0.44
 
 # Radius of each spool in metres
-SPOOL_RADIUS = 0.02
+SPOOL_RADIUS = 0.025
 
 # Interval (in seconds) between successive position calculations
 TICK_TIME = 0.0005
