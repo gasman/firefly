@@ -7,11 +7,14 @@ motor_number, direction = sys.argv[1:]
 motor_number = int(motor_number)
 direction = int(direction)
 
-pos = 0
-motor = MotorRegulator(motor_number, pos)
+motor = MotorRegulator(motor_number, 0)
+if direction > 0:
+	motor.target = 10000000
+else:
+	motor.target = -10000000
+
 t = 0
 while True:
-	motor.set_position(pos, t)
-	pos += direction
+	motor.tick(t)
 	t += MIN_STEP_TIME
 	time.sleep(MIN_STEP_TIME)
