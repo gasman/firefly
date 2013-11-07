@@ -3,7 +3,7 @@ from geometry import Arena
 from config import TICK_TIME
 
 # how long we should take to trace a full circle
-REVOLUTION_TIME = 60.0
+REVOLUTION_TIME = 30.0
 
 # centre coordinates of circle, in metres from top left
 CENTRE = (0.22, 0.1)
