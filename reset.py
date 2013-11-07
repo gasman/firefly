@@ -1,4 +1,4 @@
-from config import MIN_STEP_TIME
+from config import TICK_TIME
 from motor import MotorRegulator
 import time
 import sys
@@ -16,5 +16,5 @@ else:
 t = 0
 while True:
 	motor.tick(t)
-	t += MIN_STEP_TIME
-	time.sleep(MIN_STEP_TIME)
+	t += TICK_TIME
+	time.sleep(TICK_TIME)
